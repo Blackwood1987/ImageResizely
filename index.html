@@ -7,171 +7,416 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" crossorigin="anonymous"/>
 <script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              "tertiary-container": "#3d2060",
-              "on-primary-fixed-variant": "#004d73",
-              "on-primary-fixed": "#001f2e",
-              "surface": "#0f1524",
-              "background": "#0a0e1a",
-              "surface-container-high": "#1a2438",
-              "on-surface-variant": "#a0b4c4",
-              "surface-container": "#141c2e",
-              "error": "#ff6b6b",
-              "surface-bright": "#1a2438",
-              "on-primary-container": "#c8eaff",
-              "primary-fixed": "#c8eaff",
-              "inverse-surface": "#e0e8f0",
-              "error-container": "#3d1414",
-              "inverse-primary": "#0a4c6e",
-              "on-primary": "#001f2e",
-              "on-tertiary-container": "#e8d0ff",
-              "secondary-fixed-dim": "#88b4cc",
-              "on-secondary-container": "#c0d8e8",
-              "primary-fixed-dim": "#7dd3fc",
-              "outline-variant": "#2a3a48",
-              "secondary-fixed": "#c0d8e8",
-              "outline": "#4a6070",
-              "on-surface": "#e0e8f0",
-              "surface-container-highest": "#202c42",
-              "primary": "#7dd3fc",
-              "primary-container": "#0e4d6e",
-              "secondary-container": "#1a3a4e",
-              "on-tertiary-fixed-variant": "#4d2a73",
-              "on-secondary": "#001f2e",
-              "surface-container-lowest": "#0a0e1a",
-              "inverse-on-surface": "#0a0e1a",
-              "tertiary-fixed-dim": "#c8a0f0",
-              "surface-tint": "#7dd3fc",
-              "surface-dim": "#0f1524",
-              "on-tertiary-fixed": "#1a002e",
-              "secondary": "#88b4cc",
-              "on-secondary-fixed": "#0d1f2b",
-              "surface-container-low": "#111828",
-              "on-tertiary": "#1a002e",
-              "on-background": "#e0e8f0",
-              "on-secondary-fixed-variant": "#2a4a5e",
-              "on-error-container": "#ffb3b3",
-              "surface-variant": "#1a2438",
-              "on-error": "#1a0000",
-              "tertiary-fixed": "#e8d0ff",
-              "tertiary": "#c8a0f0"
-            },
-            fontFamily: {
-              "headline": ["Inter"],
-              "body": ["Inter"],
-              "label": ["Inter"]
-            },
-            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
-          },
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "surface": "#0f1524", "background": "#0a0e1a",
+          "surface-container-high": "#1a2438", "on-surface-variant": "#a0b4c4",
+          "surface-container": "#141c2e", "error": "#ff6b6b",
+          "outline-variant": "#2a3a48", "outline": "#4a6070",
+          "on-surface": "#e0e8f0", "surface-container-highest": "#202c42",
+          "primary": "#7dd3fc", "primary-container": "#0e4d6e",
+          "secondary-container": "#1a3a4e", "surface-container-low": "#111828",
+          "on-background": "#e0e8f0", "tertiary": "#c8a0f0",
+          "surface-dim": "#0f1524", "secondary": "#88b4cc",
         },
-      }
-    </script>
+        fontFamily: { "headline": ["Inter"], "body": ["Inter"], "label": ["Inter"] },
+        borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+      },
+    },
+  }
+</script>
 <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .glass-card {
-            background: rgba(15, 21, 36, 0.6);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(125, 211, 252, 0.1);
-        }
-        .glass-elevated {
-            background: rgba(15, 21, 36, 0.75);
-            backdrop-filter: blur(24px);
-            border: 1px solid rgba(125, 211, 252, 0.15);
-        }
-        .icon-btn {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .footer-link {
-            @apply text-xs text-slate-500 hover:text-primary transition-colors;
-        }
-    </style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .glass-card { background: rgba(15,21,36,0.6); backdrop-filter: blur(16px); border: 1px solid rgba(125,211,252,0.1); }
+  .glass-elevated { background: rgba(15,21,36,0.75); backdrop-filter: blur(24px); border: 1px solid rgba(125,211,252,0.15); }
+  .drag-over { border-color: rgba(125,211,252,0.5) !important; background: rgba(125,211,252,0.05); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .animate-spin { animation: spin 1s linear infinite; display: inline-block; }
+</style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-primary/30">
-<header class="sticky top-0 z-50 flex justify-between items-center px-6 py-3 w-full max-w-7xl mx-auto bg-background/60 backdrop-blur-xl border-b border-sky-400/10 shadow-[0_0_30px_rgba(125,211,252,0.05)] font-body antialiased">
-<div class="text-xl font-semibold tracking-tight text-primary">Glacier Utility</div>
-<nav class="hidden md:flex items-center gap-8">
-<a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="javascript:void(0)">Resize</a>
-<a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="javascript:void(0)">Convert</a>
-<a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="javascript:void(0)">Compress</a>
-</nav>
-<div class="flex items-center gap-2">
-<button class="material-symbols-outlined text-slate-400 hover:bg-sky-400/5 transition-all duration-300 p-2 rounded-full active:scale-95 text-[20px] focus:ring-2 focus:ring-primary/50 focus:outline-none" aria-label="설정 열기">settings</button>
-<button class="material-symbols-outlined text-slate-400 hover:bg-sky-400/5 transition-all duration-300 p-2 rounded-full active:scale-95 text-[20px] focus:ring-2 focus:ring-primary/50 focus:outline-none" aria-label="도움말 열기">help</button>
-</div>
+<body class="min-h-screen flex flex-col bg-background text-on-background selection:bg-primary/30">
+
+<header class="sticky top-0 z-50 flex justify-between items-center px-6 py-3 w-full max-w-7xl mx-auto bg-background/60 backdrop-blur-xl border-b border-primary/10 shadow-[0_0_30px_rgba(125,211,252,0.05)] font-body antialiased">
+  <div class="text-xl font-semibold tracking-tight text-primary">Glacier Utility</div>
+  <nav class="hidden md:flex items-center gap-8">
+    <a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="javascript:void(0)">Resize</a>
+    <a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="javascript:void(0)">Convert</a>
+    <a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="javascript:void(0)">Compress</a>
+  </nav>
+  <div class="flex items-center gap-2">
+    <button class="material-symbols-outlined text-on-surface-variant hover:bg-primary/5 transition-all duration-300 p-2 rounded-full active:scale-95 text-[20px] focus:ring-2 focus:ring-primary/50 focus:outline-none" aria-label="설정 열기">settings</button>
+    <button class="material-symbols-outlined text-on-surface-variant hover:bg-primary/5 transition-all duration-300 p-2 rounded-full active:scale-95 text-[20px] focus:ring-2 focus:ring-primary/50 focus:outline-none" aria-label="도움말 열기">help</button>
+  </div>
 </header>
+
 <main class="flex-grow flex flex-col items-center justify-center px-6 py-6 relative overflow-hidden">
-<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 blur-[120px] rounded-full pointer-events-none"></div>
-<div class="absolute top-1/4 right-1/4 w-[400px] h-[400px] bg-tertiary/5 blur-[100px] rounded-full pointer-events-none"></div>
-<div class="w-full max-w-4xl z-10">
-<div class="text-center mb-8">
-<h1 class="text-3xl md:text-4xl font-bold tracking-tight mb-2 text-on-surface">Crystal Clear <span class="text-primary">Optimization.</span></h1>
-<p class="text-on-surface-variant text-base max-w-lg mx-auto">Effortlessly resize, convert, and compress your assets in an ethereal high-performance environment.</p>
-</div>
-<div class="glass-card rounded-xl p-6 shadow-2xl">
-<div class="relative group cursor-pointer border-2 border-dashed border-sky-400/20 hover:border-sky-400/40 transition-all duration-500 rounded-xl p-8 mb-6 flex flex-col items-center justify-center text-center focus:ring-2 focus:ring-primary/50 focus:outline-none"
-     role="button" tabindex="0" aria-label="이미지 업로드 (클릭 또는 파일 드롭)"
-     onclick="this.querySelector('input').click()"
-     onkeydown="if(event.key==='Enter'||event.key===' ')this.querySelector('input').click()">
-<div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-<span class="material-symbols-outlined text-primary text-2xl">upload_file</span>
-</div>
-<div class="space-y-1">
-<h3 class="text-lg font-medium text-on-surface">Drop your file here</h3>
-<p class="text-on-surface-variant text-sm">PNG, JPG, WebP up to 50MB</p>
-</div>
-<input class="absolute inset-0 opacity-0 cursor-pointer" type="file" accept=".png,.jpg,.jpeg,.webp" aria-label="이미지 파일 선택"/>
-</div>
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-<div class="space-y-3">
-<label class="flex items-center gap-2 text-[13px] font-medium text-sky-300/80" for="width"><span class="material-symbols-outlined text-[16px]">aspect_ratio</span>Resize</label>
-<div class="grid grid-cols-2 gap-3">
-<div class="space-y-1"><span class="text-[9px] uppercase tracking-wider text-slate-500 ml-1">Width</span><input class="w-full bg-surface-container border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-lg px-3 py-1.5 text-sm text-on-surface transition-all outline-none" placeholder="1920" type="number" id="width" min="1" max="99999" step="1"/></div>
-<div class="space-y-1"><span class="text-[9px] uppercase tracking-wider text-slate-500 ml-1">Height</span><input class="w-full bg-surface-container border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-lg px-3 py-1.5 text-sm text-on-surface transition-all outline-none" placeholder="1080" type="number" id="height" min="1" max="99999" step="1"/></div>
-</div>
-</div>
-<div class="space-y-3">
-<label class="flex items-center gap-2 text-[13px] font-medium text-sky-300/80" for="format"><span class="material-symbols-outlined text-[16px]">sync</span>Convert</label>
-<div class="relative">
-<select class="w-full appearance-none bg-surface-container border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-lg px-3 py-1.5 text-sm text-on-surface transition-all outline-none" id="format">
-<option value="webp">WebP (Optimized)</option><option value="png">PNG (Lossless)</option><option value="jpg">JPG (Standard)</option><option value="avif">AVIF (High Detail)</option>
-</select>
-<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500 text-[18px]">expand_more</span>
-</div>
-</div>
-<div class="space-y-3">
-<label class="flex items-center gap-2 text-[13px] font-medium text-sky-300/80" for="quality"><span class="material-symbols-outlined text-[16px]">compress</span>Compress</label>
-<div class="space-y-2 pt-1">
-<input class="w-full h-1 bg-surface-container rounded-lg appearance-none cursor-pointer accent-primary" max="100" min="1" type="range" value="80" id="quality" aria-label="압축 품질" aria-valuemin="1" aria-valuemax="100" oninput="document.getElementById('quality-val').textContent=this.value+'%'"/>
-<div class="flex justify-between text-[10px] text-slate-500 font-medium"><span>High Quality</span><span class="text-primary" id="quality-val">80%</span><span>Small Size</span></div>
-</div>
-</div>
-</div>
-<div class="mt-8 flex justify-center">
-<button class="relative group bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary px-10 py-3 rounded-xl font-semibold tracking-wide transition-all duration-300 active:scale-95 flex items-center gap-2 overflow-hidden">
-<div class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-<span class="material-symbols-outlined text-[20px]">auto_fix_high</span>Process Image
-</button>
-</div>
-</div>
-</div>
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 blur-[120px] rounded-full pointer-events-none"></div>
+  <div class="absolute top-1/4 right-1/4 w-[400px] h-[400px] bg-tertiary/5 blur-[100px] rounded-full pointer-events-none"></div>
+
+  <div class="w-full max-w-4xl z-10 space-y-4">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl md:text-4xl font-bold tracking-tight mb-2 text-on-surface">Crystal Clear <span class="text-primary">Optimization.</span></h1>
+      <p class="text-on-surface-variant text-base max-w-lg mx-auto">Resize, convert, and compress images directly in your browser — no upload to any server.</p>
+    </div>
+
+    <!-- Main Card -->
+    <div class="glass-card rounded-xl p-6 shadow-2xl">
+
+      <!-- Dropzone -->
+      <div id="dropzone"
+           class="relative border-2 border-dashed border-primary/20 hover:border-primary/40 transition-all duration-500 rounded-xl mb-6 flex flex-col items-center justify-center text-center focus:ring-2 focus:ring-primary/50 focus:outline-none cursor-pointer"
+           role="button" tabindex="0" aria-label="이미지 업로드 (클릭 또는 파일 드롭)"
+           onclick="document.getElementById('file-input').click()"
+           onkeydown="if(event.key==='Enter'||event.key===' ')document.getElementById('file-input').click()">
+
+        <!-- Empty state -->
+        <div id="dropzone-empty" class="py-10 px-8">
+          <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4 mx-auto transition-transform duration-300 group-hover:scale-110">
+            <span class="material-symbols-outlined text-primary text-2xl">upload_file</span>
+          </div>
+          <h3 class="text-lg font-medium text-on-surface">Drop your file here</h3>
+          <p class="text-on-surface-variant text-sm mt-1">PNG, JPG, WebP up to 50MB</p>
+        </div>
+
+        <!-- Filled state -->
+        <div id="dropzone-filled" class="hidden py-5 px-6 w-full">
+          <div class="flex items-center gap-4">
+            <img id="dropzone-preview" class="w-20 h-20 object-cover rounded-lg border border-primary/20 flex-shrink-0" alt="미리보기"/>
+            <div class="text-left min-w-0 flex-1">
+              <p id="original-name" class="font-medium text-on-surface text-sm truncate"></p>
+              <p class="text-on-surface-variant text-xs mt-0.5">원본 크기: <span id="original-size" class="text-primary font-mono"></span></p>
+              <p class="text-on-surface-variant text-xs">해상도: <span id="original-dims" class="text-primary font-mono"></span></p>
+            </div>
+            <button id="clear-btn"
+                    class="flex-shrink-0 text-on-surface-variant hover:text-error transition-colors p-1 rounded focus:outline-none"
+                    onclick="event.stopPropagation(); GlacierApp.clearFile()"
+                    aria-label="파일 제거">
+              <span class="material-symbols-outlined text-[20px]">close</span>
+            </button>
+          </div>
+        </div>
+
+        <input id="file-input" class="hidden" type="file" accept=".png,.jpg,.jpeg,.webp,.avif" aria-label="이미지 파일 선택"/>
+      </div>
+
+      <!-- Controls -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+
+        <!-- Resize -->
+        <div class="space-y-3">
+          <label class="flex items-center gap-2 text-[13px] font-medium text-primary/80">
+            <span class="material-symbols-outlined text-[16px]">aspect_ratio</span>Resize
+          </label>
+          <div class="grid grid-cols-[1fr,auto,1fr] gap-2 items-end">
+            <div class="space-y-1">
+              <span class="text-[9px] uppercase tracking-wider text-on-surface-variant/60 ml-1">Width</span>
+              <input id="width" class="w-full bg-surface-container border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-lg px-3 py-1.5 text-sm text-on-surface transition-all outline-none" placeholder="1920" type="number" min="1" max="99999" step="1"/>
+            </div>
+            <button id="aspect-lock"
+                    class="pb-1 flex flex-col items-center text-primary hover:text-primary/60 transition-colors focus:outline-none"
+                    aria-label="비율 고정 토글" title="비율 고정">
+              <span class="material-symbols-outlined text-[18px]">lock</span>
+            </button>
+            <div class="space-y-1">
+              <span class="text-[9px] uppercase tracking-wider text-on-surface-variant/60 ml-1">Height</span>
+              <input id="height" class="w-full bg-surface-container border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-lg px-3 py-1.5 text-sm text-on-surface transition-all outline-none" placeholder="1080" type="number" min="1" max="99999" step="1"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Convert -->
+        <div class="space-y-3">
+          <label class="flex items-center gap-2 text-[13px] font-medium text-primary/80" for="format">
+            <span class="material-symbols-outlined text-[16px]">sync</span>Convert
+          </label>
+          <div class="relative">
+            <select id="format" class="w-full appearance-none bg-surface-container border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-lg px-3 py-1.5 text-sm text-on-surface transition-all outline-none">
+              <option value="webp">WebP (Optimized)</option>
+              <option value="png">PNG (Lossless)</option>
+              <option value="jpg">JPG (Standard)</option>
+              <option value="avif">AVIF (High Detail)</option>
+            </select>
+            <span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-[18px]">expand_more</span>
+          </div>
+        </div>
+
+        <!-- Compress -->
+        <div class="space-y-3">
+          <label class="flex items-center gap-2 text-[13px] font-medium text-primary/80" for="quality">
+            <span class="material-symbols-outlined text-[16px]">compress</span>Compress
+          </label>
+          <div class="space-y-2 pt-1">
+            <input id="quality" class="w-full h-1 bg-surface-container rounded-lg appearance-none cursor-pointer accent-primary" max="100" min="1" type="range" value="80"
+                   aria-label="압축 품질" aria-valuemin="1" aria-valuemax="100"
+                   oninput="document.getElementById('quality-val').textContent=this.value+'%'"/>
+            <div class="flex justify-between text-[10px] text-on-surface-variant font-medium">
+              <span>High Quality</span><span class="text-primary font-mono" id="quality-val">80%</span><span>Small Size</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Process Button -->
+      <div class="mt-8 flex justify-center">
+        <button id="process-btn"
+                class="relative group bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary px-10 py-3 rounded-xl font-semibold tracking-wide transition-all duration-300 active:scale-95 flex items-center gap-2 overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100">
+          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 pointer-events-none"></div>
+          <span class="material-symbols-outlined text-[20px]">auto_fix_high</span>Process Image
+        </button>
+      </div>
+    </div>
+
+    <!-- Result Section -->
+    <div id="result-section" class="hidden glass-elevated rounded-xl p-6 shadow-2xl">
+      <h2 class="text-sm font-semibold text-primary/80 flex items-center gap-2 mb-4">
+        <span class="material-symbols-outlined text-[16px]">check_circle</span>처리 완료
+      </h2>
+      <div class="grid grid-cols-2 gap-4 mb-5">
+        <!-- Before -->
+        <div class="space-y-2">
+          <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-semibold">원본</p>
+          <img id="before-preview" class="w-full h-40 object-contain rounded-lg bg-surface-container border border-outline-variant" alt="원본"/>
+          <div class="text-xs text-on-surface-variant space-y-0.5">
+            <p>크기: <span id="before-size" class="text-on-surface font-mono"></span></p>
+            <p>해상도: <span id="before-dims" class="text-on-surface font-mono"></span></p>
+          </div>
+        </div>
+        <!-- After -->
+        <div class="space-y-2">
+          <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-semibold">결과</p>
+          <img id="result-preview" class="w-full h-40 object-contain rounded-lg bg-surface-container border border-primary/20" alt="처리 결과"/>
+          <div class="text-xs text-on-surface-variant space-y-0.5">
+            <p>크기: <span id="result-size" class="text-on-surface font-mono"></span> <span id="result-saving" class="font-bold"></span></p>
+            <p>해상도: <span id="result-dims" class="text-on-surface font-mono"></span> · <span id="result-fmt" class="text-primary font-mono uppercase"></span></p>
+          </div>
+        </div>
+      </div>
+      <button onclick="GlacierApp.download()"
+              class="w-full py-3 bg-primary/20 hover:bg-primary/30 border border-primary/40 text-primary rounded-xl font-semibold tracking-wide transition-all active:scale-95 flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined text-[20px]">download</span>다운로드
+      </button>
+    </div>
+
+  </div>
 </main>
-<footer class="bg-background py-6 border-t border-sky-400/5 mt-auto">
-<div class="flex flex-col md:flex-row justify-between items-center px-8 w-full max-w-7xl mx-auto gap-4">
-<div class="text-base font-bold text-primary/50">Glacier Utility</div>
-<div class="flex gap-6">
-<a class="text-xs font-body text-slate-500 hover:text-primary transition-colors" href="javascript:void(0)">Privacy</a>
-<a class="text-xs font-body text-slate-500 hover:text-primary transition-colors" href="javascript:void(0)">Terms</a>
-<a class="text-xs font-body text-slate-500 hover:text-primary transition-colors" href="javascript:void(0)">API</a>
-<a class="text-xs font-body text-slate-500 hover:text-primary transition-colors" href="javascript:void(0)">Github</a>
-</div>
-<p class="text-xs font-body text-slate-500">© <span id="copyright-year">2024</span> Glacier Utility.</p>
-</div>
+
+<footer class="bg-background py-6 border-t border-primary/5 mt-auto">
+  <div class="flex flex-col md:flex-row justify-between items-center px-8 w-full max-w-7xl mx-auto gap-4">
+    <div class="text-base font-bold text-primary/50">Glacier Utility</div>
+    <div class="flex gap-6">
+      <a class="text-xs font-body text-on-surface-variant/50 hover:text-primary transition-colors" href="javascript:void(0)">Privacy</a>
+      <a class="text-xs font-body text-on-surface-variant/50 hover:text-primary transition-colors" href="javascript:void(0)">Terms</a>
+      <a class="text-xs font-body text-on-surface-variant/50 hover:text-primary transition-colors" href="javascript:void(0)">API</a>
+      <a class="text-xs font-body text-on-surface-variant/50 hover:text-primary transition-colors" href="javascript:void(0)">Github</a>
+    </div>
+    <p class="text-xs font-body text-on-surface-variant/50">© <span id="copyright-year">2024</span> Glacier Utility.</p>
+  </div>
 </footer>
-<script>document.getElementById('copyright-year').textContent = new Date().getFullYear();</script>
+
+<script>
+const GlacierApp = (() => {
+  let originalImage = null;
+  let originalFile = null;
+  let outputBlob = null;
+  let outputFmt = 'webp';
+  let aspectRatio = null;
+  let lockAspect = true;
+
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+  }
+
+  function showError(msg) {
+    const btn = document.getElementById('process-btn');
+    btn.disabled = false;
+    btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">auto_fix_high</span>Process Image';
+    alert(msg);
+  }
+
+  function loadFile(file) {
+    if (!file.type.startsWith('image/')) { alert('이미지 파일만 지원합니다.'); return; }
+    if (file.size > 50 * 1024 * 1024) { alert('50MB 이하 파일만 지원합니다.'); return; }
+
+    originalFile = file;
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      originalImage = img;
+      aspectRatio = img.width / img.height;
+
+      document.getElementById('width').value = img.width;
+      document.getElementById('height').value = img.height;
+      document.getElementById('dropzone-preview').src = url;
+      document.getElementById('before-preview').src = url;
+      document.getElementById('original-name').textContent = file.name;
+      document.getElementById('original-size').textContent = formatSize(file.size);
+      document.getElementById('original-dims').textContent = img.width + ' × ' + img.height;
+      document.getElementById('before-size').textContent = formatSize(file.size);
+      document.getElementById('before-dims').textContent = img.width + ' × ' + img.height;
+
+      document.getElementById('dropzone-empty').classList.add('hidden');
+      document.getElementById('dropzone-filled').classList.remove('hidden');
+      document.getElementById('result-section').classList.add('hidden');
+      outputBlob = null;
+    };
+    img.onerror = () => alert('이미지를 불러올 수 없습니다.');
+    img.src = url;
+  }
+
+  function clearFile() {
+    originalImage = null;
+    originalFile = null;
+    outputBlob = null;
+    document.getElementById('file-input').value = '';
+    document.getElementById('dropzone-empty').classList.remove('hidden');
+    document.getElementById('dropzone-filled').classList.add('hidden');
+    document.getElementById('result-section').classList.add('hidden');
+    document.getElementById('width').value = '';
+    document.getElementById('height').value = '';
+  }
+
+  function supportsFormat(mime) {
+    const c = document.createElement('canvas');
+    c.width = 1; c.height = 1;
+    return c.toDataURL(mime).startsWith('data:' + mime);
+  }
+
+  function process() {
+    if (!originalImage) { alert('먼저 이미지를 업로드하세요.'); return; }
+
+    const fmt = document.getElementById('format').value;
+    const mimeMap = { webp: 'image/webp', png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', avif: 'image/avif' };
+    const mime = mimeMap[fmt] || 'image/webp';
+
+    if (!supportsFormat(mime)) {
+      alert(fmt.toUpperCase() + ' 형식은 이 브라우저에서 지원되지 않습니다.\nWebP 또는 JPG를 선택해 주세요.');
+      return;
+    }
+
+    const w = Math.max(1, parseInt(document.getElementById('width').value) || originalImage.width);
+    const h = Math.max(1, parseInt(document.getElementById('height').value) || originalImage.height);
+    const pixels = w * h;
+    if (pixels > 64_000_000) {
+      const ok = confirm(`출력 해상도(${w}×${h})가 매우 큽니다.\n메모리 부족으로 브라우저가 느려질 수 있습니다.\n계속하시겠습니까?`);
+      if (!ok) return;
+    }
+
+    const btn = document.getElementById('process-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="material-symbols-outlined text-[20px] animate-spin">autorenew</span>처리 중...';
+
+    setTimeout(() => {
+      const qualityPct = parseInt(document.getElementById('quality').value);
+      const quality = qualityPct / 100;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(originalImage, 0, 0, w, h);
+
+      const q = fmt === 'png' ? undefined : quality;
+
+      canvas.toBlob((blob) => {
+        if (!blob) { showError('처리 중 오류가 발생했습니다. 다시 시도해 주세요.'); return; }
+        outputBlob = blob;
+        outputFmt = fmt;
+
+        const outUrl = URL.createObjectURL(blob);
+        document.getElementById('result-preview').src = outUrl;
+        document.getElementById('result-size').textContent = formatSize(blob.size);
+        document.getElementById('result-dims').textContent = w + ' × ' + h;
+        document.getElementById('result-fmt').textContent = fmt;
+
+        const pct = Math.round((1 - blob.size / originalFile.size) * 100);
+        const savingEl = document.getElementById('result-saving');
+        if (pct > 0) {
+          savingEl.textContent = '(-' + pct + '%)';
+          savingEl.className = 'font-bold text-green-400';
+        } else {
+          savingEl.textContent = '(+' + Math.abs(pct) + '%)';
+          savingEl.className = 'font-bold text-error';
+        }
+
+        document.getElementById('result-section').classList.remove('hidden');
+        document.getElementById('result-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">auto_fix_high</span>Process Image';
+      }, mime, q);
+    }, 10);
+  }
+
+  function download() {
+    if (!outputBlob) return;
+    const extMap = { jpg: 'jpg', jpeg: 'jpg', png: 'png', webp: 'webp', avif: 'avif' };
+    const ext = extMap[outputFmt] || 'webp';
+    const base = originalFile ? originalFile.name.replace(/\.[^.]+$/, '') : 'image';
+    const url = URL.createObjectURL(outputBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = base + '_processed.' + ext;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function init() {
+    document.getElementById('copyright-year').textContent = new Date().getFullYear();
+
+    // File input
+    document.getElementById('file-input').addEventListener('change', (e) => {
+      if (e.target.files[0]) loadFile(e.target.files[0]);
+    });
+
+    // Drag and drop
+    const zone = document.getElementById('dropzone');
+    zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', (e) => { if (!zone.contains(e.relatedTarget)) zone.classList.remove('drag-over'); });
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      zone.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file) loadFile(file);
+    });
+
+    // Aspect ratio lock
+    const lockBtn = document.getElementById('aspect-lock');
+    lockBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      lockAspect = !lockAspect;
+      const icon = lockBtn.querySelector('span');
+      icon.textContent = lockAspect ? 'lock' : 'lock_open';
+      lockBtn.classList.toggle('text-primary', lockAspect);
+      lockBtn.classList.toggle('text-on-surface-variant', !lockAspect);
+    });
+
+    document.getElementById('width').addEventListener('input', () => {
+      if (lockAspect && aspectRatio) {
+        const w = parseInt(document.getElementById('width').value);
+        if (w > 0) document.getElementById('height').value = Math.round(w / aspectRatio);
+      }
+    });
+    document.getElementById('height').addEventListener('input', () => {
+      if (lockAspect && aspectRatio) {
+        const h = parseInt(document.getElementById('height').value);
+        if (h > 0) document.getElementById('width').value = Math.round(h * aspectRatio);
+      }
+    });
+
+    // Process button
+    document.getElementById('process-btn').addEventListener('click', process);
+  }
+
+  return { init, clearFile, download };
+})();
+
+GlacierApp.init();
+</script>
 </body></html>
