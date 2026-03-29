@@ -4,8 +4,8 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Glacier Utility - Crystal Clear Optimization</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" crossorigin="anonymous"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" crossorigin="anonymous"/>
 <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
@@ -42,21 +42,26 @@
         .glass-panel { background: rgba(15, 21, 36, 0.6); backdrop-filter: blur(16px); border: 1px solid rgba(125, 211, 252, 0.1); }
         .glass-panel-elevated { background: rgba(15, 21, 36, 0.75); backdrop-filter: blur(24px); border: 1px solid rgba(125, 211, 252, 0.15); }
         .text-glow { text-shadow: 0 0 20px rgba(125, 211, 252, 0.3); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.15s; }
+        .nav-item:active { transform: scale(0.95); }
         body { min-height: max(884px, 100dvh); }
     </style>
 </head>
 <body class="bg-background text-on-background font-body min-h-screen flex flex-col">
-<header class="fixed top-0 w-full z-50 bg-[#0f1524]/60 backdrop-blur-xl border-b border-sky-400/10 shadow-[0_0_30px_rgba(125,211,252,0.05)] flex justify-between items-center px-4 h-16">
-<button class="p-2 text-sky-300 hover:bg-sky-400/10 transition-colors active:scale-95 duration-200 rounded-lg"><span class="material-symbols-outlined">menu</span></button>
-<span class="text-xl font-semibold tracking-widest text-sky-300 antialiased tracking-tight">GLACIER</span>
-<button class="p-2 text-sky-300 hover:bg-sky-400/10 transition-colors active:scale-95 duration-200 rounded-lg"><span class="material-symbols-outlined">account_circle</span></button>
+<header class="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-xl border-b border-sky-400/10 shadow-[0_0_30px_rgba(125,211,252,0.05)] flex justify-between items-center px-4 h-16">
+<button class="p-2 text-sky-300 hover:bg-sky-400/10 transition-colors active:scale-95 duration-200 rounded-lg focus:ring-2 focus:ring-primary/50 focus:outline-none" aria-label="네비게이션 메뉴 열기"><span class="material-symbols-outlined">menu</span></button>
+<span class="text-xl font-semibold tracking-widest text-primary antialiased">GLACIER</span>
+<button class="p-2 text-sky-300 hover:bg-sky-400/10 transition-colors active:scale-95 duration-200 rounded-lg focus:ring-2 focus:ring-primary/50 focus:outline-none" aria-label="계정 메뉴 열기"><span class="material-symbols-outlined">account_circle</span></button>
 </header>
 <main class="flex-grow pt-20 pb-28 px-4 max-w-lg mx-auto w-full space-y-5">
 <section class="text-center space-y-2">
 <h1 class="text-3xl font-extrabold tracking-tight text-on-surface text-glow leading-tight">Crystal Clear <span class="text-primary">Optimization</span></h1>
 <p class="text-on-surface-variant text-xs font-medium opacity-80">Ethereal image processing with frozen precision.</p>
 </section>
-<section class="glass-panel-elevated rounded-xl p-6 border-dashed border-2 border-primary/30 flex flex-col items-center justify-center space-y-3 text-center group active:scale-[0.98] transition-all">
+<section class="glass-panel-elevated rounded-xl p-6 border-dashed border-2 border-primary/30 flex flex-col items-center justify-center space-y-3 text-center group active:scale-[0.98] transition-all cursor-pointer"
+         role="button" tabindex="0" aria-label="이미지 업로드 (클릭 또는 파일 드롭)"
+         onclick="document.getElementById('file-upload-mobile').click()"
+         onkeydown="if(event.key==='Enter'||event.key===' ')document.getElementById('file-upload-mobile').click()">
 <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 shadow-[0_0_20px_rgba(125,211,252,0.1)]">
 <span class="material-symbols-outlined text-primary text-2xl">upload_file</span>
 </div>
@@ -64,20 +69,21 @@
 <p class="text-on-surface font-semibold text-sm">Drop your file here</p>
 <p class="text-on-surface-variant text-[10px]">Supports PNG, WEBP, and JPG</p>
 </div>
+<input type="file" accept=".png,.jpg,.jpeg,.webp" class="sr-only" id="file-upload-mobile" aria-label="이미지 파일 선택"/>
 </section>
 <section class="space-y-3">
 <div class="glass-panel rounded-xl p-4 space-y-3">
 <div class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-lg">aspect_ratio</span><h2 class="text-on-surface text-sm font-semibold tracking-wide">Resize</h2></div>
 <div class="grid grid-cols-2 gap-3">
-<div class="space-y-1.5"><label class="text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Width (px)</label><input class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:border-primary outline-none transition-all placeholder:text-on-surface-variant/30" placeholder="1920" type="number"/></div>
-<div class="space-y-1.5"><label class="text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">Height (px)</label><input class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:border-primary outline-none transition-all placeholder:text-on-surface-variant/30" placeholder="1080" type="number"/></div>
+<div class="space-y-1.5"><label class="text-[9px] uppercase tracking-widest text-on-surface-variant font-bold" for="width-m">Width (px)</label><input class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:border-primary outline-none transition-all placeholder:text-on-surface-variant/30" placeholder="1920" type="number" id="width-m" min="1" max="99999" step="1"/></div>
+<div class="space-y-1.5"><label class="text-[9px] uppercase tracking-widest text-on-surface-variant font-bold" for="height-m">Height (px)</label><input class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:border-primary outline-none transition-all placeholder:text-on-surface-variant/30" placeholder="1080" type="number" id="height-m" min="1" max="99999" step="1"/></div>
 </div>
 </div>
 <div class="glass-panel rounded-xl p-4 space-y-3">
 <div class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-lg">transform</span><h2 class="text-on-surface text-sm font-semibold tracking-wide">Convert</h2></div>
 <div class="relative">
 <select class="w-full appearance-none bg-surface-container-low border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:border-primary outline-none transition-all pr-10">
-<option>WebP (Optimized)</option><option>PNG (Lossless)</option><option>JPEG (Legacy)</option><option>AVIF (Ultra)</option>
+<option value="webp">WebP (Optimized)</option><option value="png">PNG (Lossless)</option><option value="jpeg">JPEG (Legacy)</option><option value="avif">AVIF (Ultra)</option>
 </select>
 <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
 </div>
@@ -85,9 +91,9 @@
 <div class="glass-panel rounded-xl p-4 space-y-3">
 <div class="flex items-center justify-between">
 <div class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-lg">compress</span><h2 class="text-on-surface text-sm font-semibold tracking-wide">Compress</h2></div>
-<span class="text-primary text-[10px] font-bold font-mono">85%</span>
+<span class="text-primary text-[10px] font-bold font-mono" id="quality-val-m">85%</span>
 </div>
-<input class="w-full h-1 bg-surface-container-highest rounded-full appearance-none accent-primary cursor-pointer" type="range"/>
+<input class="w-full h-1 bg-surface-container-highest rounded-full appearance-none accent-primary cursor-pointer" type="range" min="1" max="100" value="85" id="quality-m" aria-label="압축 품질" aria-valuemin="1" aria-valuemax="100" oninput="document.getElementById('quality-val-m').textContent=this.value+'%'"/>
 <div class="flex justify-between text-[9px] text-on-surface-variant uppercase tracking-tighter"><span>Performance</span><span>Quality</span></div>
 </div>
 <button class="w-full py-4 bg-primary/20 hover:bg-primary/30 border border-primary/40 rounded-xl text-primary font-bold tracking-widest uppercase text-xs shadow-[0_0_30px_rgba(125,211,252,0.15)] active:scale-95 transition-all flex items-center justify-center gap-3">
@@ -95,18 +101,19 @@
 </button>
 </section>
 </main>
-<footer class="bg-[#0a0e1a]/80 backdrop-blur-md border-t border-sky-400/10 w-full py-6 mt-auto flex flex-col items-center gap-3 px-6">
+<footer class="bg-background/80 backdrop-blur-md border-t border-sky-400/10 w-full py-6 mt-auto flex flex-col items-center gap-3 px-6">
 <div class="flex gap-6">
-<a class="text-slate-500 hover:text-sky-300 transition-colors text-[10px] uppercase tracking-widest" href="#">Privacy</a>
-<a class="text-slate-500 hover:text-sky-300 transition-colors text-[10px] uppercase tracking-widest" href="#">Terms</a>
-<a class="text-slate-500 hover:text-sky-300 transition-colors text-[10px] uppercase tracking-widest" href="#">Support</a>
+<a class="text-slate-500 hover:text-primary transition-colors text-[10px] uppercase tracking-widest" href="javascript:void(0)">Privacy</a>
+<a class="text-slate-500 hover:text-primary transition-colors text-[10px] uppercase tracking-widest" href="javascript:void(0)">Terms</a>
+<a class="text-slate-500 hover:text-primary transition-colors text-[10px] uppercase tracking-widest" href="javascript:void(0)">Support</a>
 </div>
-<p class="text-slate-500 text-[9px] uppercase tracking-[0.2em]">© 2024 Glacier Utility. Frozen Light.</p>
+<p class="text-slate-500 text-[9px] uppercase tracking-[0.2em]">© <span id="copyright-year-m">2024</span> Glacier Utility. Frozen Light.</p>
 </footer>
-<nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#0a0e1a]/95 backdrop-blur-2xl border-t border-sky-400/10 flex items-center justify-around px-2 z-50">
-<a class="flex flex-col items-center gap-1 text-sky-300 font-bold active:scale-95 transition-all" href="#"><span class="material-symbols-outlined">dashboard</span><span class="text-[10px] uppercase tracking-tighter">Dashboard</span></a>
-<a class="flex flex-col items-center gap-1 text-slate-400 active:scale-95 transition-all" href="#"><span class="material-symbols-outlined">insights</span><span class="text-[10px] uppercase tracking-tighter">Analytics</span></a>
-<a class="flex flex-col items-center gap-1 text-slate-400 active:scale-95 transition-all" href="#"><span class="material-symbols-outlined">account_balance_wallet</span><span class="text-[10px] uppercase tracking-tighter">Assets</span></a>
-<a class="flex flex-col items-center gap-1 text-slate-400 active:scale-95 transition-all" href="#"><span class="material-symbols-outlined">settings</span><span class="text-[10px] uppercase tracking-tighter">Settings</span></a>
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-background/95 backdrop-blur-2xl border-t border-sky-400/10 flex items-center justify-around px-2 z-50" aria-label="하단 탐색">
+<a class="nav-item text-primary font-bold focus:outline-none focus:ring-2 focus:ring-primary/50 rounded" href="javascript:void(0)" aria-current="page"><span class="material-symbols-outlined">dashboard</span><span class="text-[10px] uppercase tracking-tighter">Dashboard</span></a>
+<a class="nav-item text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary/50 rounded" href="javascript:void(0)"><span class="material-symbols-outlined">insights</span><span class="text-[10px] uppercase tracking-tighter">Analytics</span></a>
+<a class="nav-item text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary/50 rounded" href="javascript:void(0)"><span class="material-symbols-outlined">account_balance_wallet</span><span class="text-[10px] uppercase tracking-tighter">Assets</span></a>
+<a class="nav-item text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary/50 rounded" href="javascript:void(0)"><span class="material-symbols-outlined">settings</span><span class="text-[10px] uppercase tracking-tighter">Settings</span></a>
 </nav>
+<script>document.getElementById('copyright-year-m').textContent = new Date().getFullYear();</script>
 </body></html>
