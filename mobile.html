@@ -38,9 +38,20 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   .animate-spin { animation: spin 1s linear infinite; display: inline-block; }
   body { min-height: max(884px, 100dvh); }
+  @keyframes fade-in { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+  .fade-in { animation: fade-in 0.25s ease-out; }
+  @keyframes toast-in { from { opacity:0; transform:translateX(-50%) translateY(-10px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+  .toast-show { animation: toast-in 0.2s ease-out forwards; }
+  .ctrl-disabled { opacity: 0.35; pointer-events: none; user-select: none; }
 </style>
 </head>
 <body class="bg-background text-on-background font-body min-h-screen flex flex-col">
+
+<!-- Toast -->
+<div id="toast-m" class="hidden fixed top-20 left-1/2 -translate-x-1/2 z-[100] glass-panel-elevated rounded-xl px-4 py-3 flex items-center gap-3 shadow-2xl max-w-xs w-[calc(100%-2rem)]">
+  <span id="toast-icon-m" class="material-symbols-outlined text-[18px] flex-shrink-0">info</span>
+  <p id="toast-msg-m" class="text-xs text-on-surface leading-snug"></p>
+</div>
 
 <header class="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-xl border-b border-primary/10 shadow-[0_0_30px_rgba(125,211,252,0.05)] flex justify-between items-center px-4 h-16">
   <button class="p-2 text-primary hover:bg-primary/10 transition-colors active:scale-95 duration-200 rounded-lg focus:ring-2 focus:ring-primary/50 focus:outline-none" aria-label="네비게이션 메뉴 열기"><span class="material-symbols-outlined">menu</span></button>
@@ -69,8 +80,8 @@
         <span class="material-symbols-outlined text-primary text-2xl">upload_file</span>
       </div>
       <div>
-        <p class="text-on-surface font-semibold text-sm">Drop your file here</p>
-        <p class="text-on-surface-variant text-[10px] mt-0.5">PNG, WebP, JPG up to 50MB</p>
+        <p class="text-on-surface font-semibold text-sm">클릭 또는 드래그로 업로드</p>
+        <p class="text-on-surface-variant text-[10px] mt-0.5">PNG, WebP, JPG, AVIF · 최대 50MB</p>
       </div>
     </div>
 
@@ -96,7 +107,7 @@
   </section>
 
   <!-- Controls -->
-  <section class="space-y-3">
+  <section id="controls-m" class="ctrl-disabled space-y-3">
 
     <!-- Resize -->
     <div class="glass-panel rounded-xl p-4 space-y-3">
@@ -106,7 +117,7 @@
       </div>
       <div class="grid grid-cols-[1fr,auto,1fr] gap-2 items-end">
         <div class="space-y-1.5">
-          <label class="text-[9px] uppercase tracking-widest text-on-surface-variant font-bold" for="width-m">Width (px)</label>
+          <label class="text-[9px] uppercase tracking-widest text-on-surface-variant font-bold block" for="width-m">Width (px)</label>
           <input class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:border-primary outline-none transition-all placeholder:text-on-surface-variant/30" placeholder="1920" type="number" id="width-m" min="1" max="99999" step="1"/>
         </div>
         <button id="aspect-lock-m"
@@ -115,7 +126,7 @@
           <span class="material-symbols-outlined text-[16px]">lock</span>
         </button>
         <div class="space-y-1.5">
-          <label class="text-[9px] uppercase tracking-widest text-on-surface-variant font-bold" for="height-m">Height (px)</label>
+          <label class="text-[9px] uppercase tracking-widest text-on-surface-variant font-bold block" for="height-m">Height (px)</label>
           <input class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-3 py-2 text-sm text-on-surface focus:border-primary outline-none transition-all placeholder:text-on-surface-variant/30" placeholder="1080" type="number" id="height-m" min="1" max="99999" step="1"/>
         </div>
       </div>
@@ -138,22 +149,23 @@
       </div>
     </div>
 
-    <!-- Compress -->
+    <!-- Quality -->
     <div class="glass-panel rounded-xl p-4 space-y-3">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary text-lg">compress</span>
-          <h2 class="text-on-surface text-sm font-semibold tracking-wide">Compress</h2>
+          <span class="material-symbols-outlined text-primary text-lg">tune</span>
+          <label class="text-on-surface text-sm font-semibold tracking-wide" for="quality-m">Quality</label>
         </div>
         <span class="text-primary text-[10px] font-bold font-mono" id="quality-val-m">85%</span>
       </div>
       <input class="w-full h-1 bg-surface-container-highest rounded-full appearance-none accent-primary cursor-pointer" type="range"
              min="1" max="100" value="85" id="quality-m"
-             aria-label="압축 품질" aria-valuemin="1" aria-valuemax="100"
+             aria-label="출력 품질" aria-valuemin="1" aria-valuemax="100"
              oninput="document.getElementById('quality-val-m').textContent=this.value+'%'"/>
       <div class="flex justify-between text-[9px] text-on-surface-variant uppercase tracking-tighter">
-        <span>Performance</span><span>Quality</span>
+        <span>저품질 (소용량)</span><span>고품질 (대용량)</span>
       </div>
+      <p id="png-notice-m" class="hidden text-[10px] text-on-surface-variant/70 italic">PNG는 무손실 포맷 — 품질 설정이 적용되지 않습니다.</p>
     </div>
 
     <!-- Process Button -->
@@ -214,6 +226,7 @@ const GlacierMobile = (() => {
   let outputFmt = 'webp';
   let aspectRatio = null;
   let lockAspect = true;
+  let toastTimer = null;
 
   function formatSize(bytes) {
     if (bytes < 1024) return bytes + ' B';
@@ -221,16 +234,68 @@ const GlacierMobile = (() => {
     return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
   }
 
-  function showError(msg) {
+  function showToast(msg, type) {
+    const t = type || 'error';
+    const toast = document.getElementById('toast-m');
+    const icon = document.getElementById('toast-icon-m');
+    const msgEl = document.getElementById('toast-msg-m');
+    msgEl.textContent = msg;
+    if (t === 'error') {
+      icon.textContent = 'error';
+      icon.className = 'material-symbols-outlined text-[18px] flex-shrink-0 text-error';
+    } else if (t === 'success') {
+      icon.textContent = 'check_circle';
+      icon.className = 'material-symbols-outlined text-[18px] flex-shrink-0 text-green-400';
+    } else {
+      icon.textContent = 'info';
+      icon.className = 'material-symbols-outlined text-[18px] flex-shrink-0 text-primary';
+    }
+    toast.classList.remove('hidden', 'toast-show');
+    void toast.offsetWidth;
+    toast.classList.add('toast-show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { toast.classList.add('hidden'); }, 3500);
+  }
+
+  function setControlsEnabled(enabled) {
+    const ctrl = document.getElementById('controls-m');
+    if (enabled) {
+      ctrl.classList.remove('ctrl-disabled');
+    } else {
+      ctrl.classList.add('ctrl-disabled');
+    }
+    const inputs = ctrl.querySelectorAll('input, select, button');
+    inputs.forEach(el => { el.disabled = !enabled; });
+  }
+
+  function setProcessing(isProcessing) {
     const btn = document.getElementById('process-btn-m');
-    btn.disabled = false;
-    btn.innerHTML = '<span class="material-symbols-outlined text-lg">auto_awesome</span>Process Image';
-    alert(msg);
+    btn.disabled = isProcessing;
+    if (isProcessing) {
+      btn.innerHTML = '<span class="material-symbols-outlined text-lg animate-spin">autorenew</span>처리 중...';
+    } else {
+      btn.innerHTML = '<span class="material-symbols-outlined text-lg">auto_awesome</span>Process Image';
+    }
+    setControlsEnabled(!isProcessing);
+  }
+
+  function updateQualityForFormat(fmt) {
+    const slider = document.getElementById('quality-m');
+    const notice = document.getElementById('png-notice-m');
+    if (fmt === 'png') {
+      slider.disabled = true;
+      slider.style.opacity = '0.4';
+      notice.classList.remove('hidden');
+    } else {
+      slider.disabled = false;
+      slider.style.opacity = '';
+      notice.classList.add('hidden');
+    }
   }
 
   function loadFile(file) {
-    if (!file.type.startsWith('image/')) { alert('이미지 파일만 지원합니다.'); return; }
-    if (file.size > 50 * 1024 * 1024) { alert('50MB 이하 파일만 지원합니다.'); return; }
+    if (!file.type.startsWith('image/')) { showToast('이미지 파일만 지원합니다.'); return; }
+    if (file.size > 50 * 1024 * 1024) { showToast('50MB 이하 파일만 지원합니다.'); return; }
 
     originalFile = file;
     const url = URL.createObjectURL(file);
@@ -238,6 +303,9 @@ const GlacierMobile = (() => {
     img.onload = () => {
       originalImage = img;
       aspectRatio = img.width / img.height;
+
+      // Reset file input so same file can be re-selected
+      document.getElementById('file-input-m').value = '';
 
       document.getElementById('width-m').value = img.width;
       document.getElementById('height-m').value = img.height;
@@ -253,8 +321,11 @@ const GlacierMobile = (() => {
       document.getElementById('dropzone-filled-m').classList.remove('hidden');
       document.getElementById('result-section-m').classList.add('hidden');
       outputBlob = null;
+
+      setControlsEnabled(true);
+      updateQualityForFormat(document.getElementById('format-m').value);
     };
-    img.onerror = () => alert('이미지를 불러올 수 없습니다.');
+    img.onerror = () => showToast('이미지를 불러올 수 없습니다.');
     img.src = url;
   }
 
@@ -268,6 +339,7 @@ const GlacierMobile = (() => {
     document.getElementById('result-section-m').classList.add('hidden');
     document.getElementById('width-m').value = '';
     document.getElementById('height-m').value = '';
+    setControlsEnabled(false);
   }
 
   function supportsFormat(mime) {
@@ -277,14 +349,14 @@ const GlacierMobile = (() => {
   }
 
   function process() {
-    if (!originalImage) { alert('먼저 이미지를 업로드하세요.'); return; }
+    if (!originalImage) { showToast('먼저 이미지를 업로드하세요.', 'info'); return; }
 
     const fmt = document.getElementById('format-m').value;
     const mimeMap = { webp: 'image/webp', png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', avif: 'image/avif' };
     const mime = mimeMap[fmt] || 'image/webp';
 
     if (!supportsFormat(mime)) {
-      alert(fmt.toUpperCase() + ' 형식은 이 브라우저에서 지원되지 않습니다.\nWebP 또는 JPEG를 선택해 주세요.');
+      showToast(fmt.toUpperCase() + ' 형식은 이 브라우저에서 지원되지 않습니다. WebP 또는 JPEG를 선택해 주세요.');
       return;
     }
 
@@ -296,9 +368,7 @@ const GlacierMobile = (() => {
       if (!ok) return;
     }
 
-    const btn = document.getElementById('process-btn-m');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="material-symbols-outlined text-lg animate-spin">autorenew</span>처리 중...';
+    setProcessing(true);
 
     setTimeout(() => {
       const quality = parseInt(document.getElementById('quality-m').value) / 100;
@@ -314,7 +384,11 @@ const GlacierMobile = (() => {
       const q = fmt === 'png' ? undefined : quality;
 
       canvas.toBlob((blob) => {
-        if (!blob) { showError('처리 중 오류가 발생했습니다. 다시 시도해 주세요.'); return; }
+        if (!blob) {
+          showToast('처리 중 오류가 발생했습니다. 다시 시도해 주세요.');
+          setProcessing(false);
+          return;
+        }
         outputBlob = blob;
         outputFmt = fmt;
 
@@ -329,16 +403,21 @@ const GlacierMobile = (() => {
         if (pct > 0) {
           savingEl.textContent = '(-' + pct + '%)';
           savingEl.className = 'font-bold text-green-400';
-        } else {
+        } else if (pct < 0) {
           savingEl.textContent = '(+' + Math.abs(pct) + '%)';
           savingEl.className = 'font-bold text-error';
+        } else {
+          savingEl.textContent = '(변화 없음)';
+          savingEl.className = 'font-bold text-on-surface-variant';
         }
 
-        document.getElementById('result-section-m').classList.remove('hidden');
-        document.getElementById('result-section-m').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        const resultSection = document.getElementById('result-section-m');
+        resultSection.classList.remove('hidden', 'fade-in');
+        void resultSection.offsetWidth;
+        resultSection.classList.add('fade-in');
+        resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-        btn.disabled = false;
-        btn.innerHTML = '<span class="material-symbols-outlined text-lg">auto_awesome</span>Process Image';
+        setProcessing(false);
       }, mime, q);
     }, 10);
   }
@@ -394,6 +473,11 @@ const GlacierMobile = (() => {
         const h = parseInt(document.getElementById('height-m').value);
         if (h > 0) document.getElementById('width-m').value = Math.round(h * aspectRatio);
       }
+    });
+
+    // Format change → update quality slider
+    document.getElementById('format-m').addEventListener('change', (e) => {
+      updateQualityForFormat(e.target.value);
     });
 
     document.getElementById('process-btn-m').addEventListener('click', process);
