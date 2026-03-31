@@ -48,7 +48,7 @@
 <body class="bg-background text-on-background font-body min-h-screen flex flex-col">
 
 <!-- Toast -->
-<div id="toast-m" class="hidden fixed top-20 left-1/2 -translate-x-1/2 z-[100] glass-panel-elevated rounded-xl px-4 py-3 flex items-center gap-3 shadow-2xl max-w-xs w-[calc(100%-2rem)]">
+<div id="toast-m" class="hidden fixed top-20 left-1/2 -translate-x-1/2 z-[100] glass-panel-elevated rounded-xl px-4 py-3 flex items-center gap-3 shadow-2xl max-w-xs w-[calc(100%-2rem)]" aria-live="polite" aria-atomic="true">
   <span id="toast-icon-m" class="material-symbols-outlined text-[18px] flex-shrink-0">info</span>
   <p id="toast-msg-m" class="text-xs text-on-surface leading-snug"></p>
 </div>
@@ -227,6 +227,8 @@ const GlacierMobile = (() => {
   let aspectRatio = null;
   let lockAspect = true;
   let toastTimer = null;
+  let previewUrl = null;
+  let resultUrl = null;
 
   function formatSize(bytes) {
     if (bytes < 1024) return bytes + ' B';
@@ -298,7 +300,10 @@ const GlacierMobile = (() => {
     if (file.size > 50 * 1024 * 1024) { showToast('50MB 이하 파일만 지원합니다.'); return; }
 
     originalFile = file;
+    if (previewUrl) { URL.revokeObjectURL(previewUrl); previewUrl = null; }
+    if (resultUrl) { URL.revokeObjectURL(resultUrl); resultUrl = null; }
     const url = URL.createObjectURL(file);
+    previewUrl = url;
     const img = new Image();
     img.onload = () => {
       originalImage = img;
@@ -333,6 +338,8 @@ const GlacierMobile = (() => {
     originalImage = null;
     originalFile = null;
     outputBlob = null;
+    if (previewUrl) { URL.revokeObjectURL(previewUrl); previewUrl = null; }
+    if (resultUrl) { URL.revokeObjectURL(resultUrl); resultUrl = null; }
     document.getElementById('file-input-m').value = '';
     document.getElementById('dropzone-empty-m').classList.remove('hidden');
     document.getElementById('dropzone-filled-m').classList.add('hidden');
@@ -392,8 +399,9 @@ const GlacierMobile = (() => {
         outputBlob = blob;
         outputFmt = fmt;
 
-        const outUrl = URL.createObjectURL(blob);
-        document.getElementById('result-preview-m').src = outUrl;
+        if (resultUrl) { URL.revokeObjectURL(resultUrl); }
+        resultUrl = URL.createObjectURL(blob);
+        document.getElementById('result-preview-m').src = resultUrl;
         document.getElementById('result-size-m').textContent = formatSize(blob.size);
         document.getElementById('result-dims-m').textContent = w + ' × ' + h;
         document.getElementById('result-fmt-m').textContent = fmt;
