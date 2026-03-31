@@ -49,7 +49,7 @@
 
 <!-- Toast -->
 <div id="toast-m" class="hidden fixed top-20 left-1/2 -translate-x-1/2 z-[100] glass-panel-elevated rounded-xl px-4 py-3 flex items-center gap-3 shadow-2xl max-w-xs w-[calc(100%-2rem)]" aria-live="polite" aria-atomic="true">
-  <span id="toast-icon-m" class="material-symbols-outlined text-[18px] flex-shrink-0">info</span>
+  <span id="toast-icon-m" class="material-symbols-outlined text-base flex-shrink-0">info</span>
   <p id="toast-msg-m" class="text-xs text-on-surface leading-snug"></p>
 </div>
 
@@ -96,7 +96,7 @@
                 class="text-on-surface-variant hover:text-error transition-colors p-1 rounded focus:outline-none flex-shrink-0"
                 onclick="event.stopPropagation(); GlacierMobile.clearFile()"
                 aria-label="파일 제거">
-          <span class="material-symbols-outlined text-[18px]">close</span>
+          <span class="material-symbols-outlined text-base">close</span>
         </button>
       </div>
     </div>
@@ -230,13 +230,13 @@ const GlacierMobile = (() => {
     msgEl.textContent = msg;
     if (t === 'error') {
       icon.textContent = 'error';
-      icon.className = 'material-symbols-outlined text-[18px] flex-shrink-0 text-error';
+      icon.className = 'material-symbols-outlined text-base flex-shrink-0 text-error';
     } else if (t === 'success') {
       icon.textContent = 'check_circle';
-      icon.className = 'material-symbols-outlined text-[18px] flex-shrink-0 text-green-400';
+      icon.className = 'material-symbols-outlined text-base flex-shrink-0 text-green-400';
     } else {
       icon.textContent = 'info';
-      icon.className = 'material-symbols-outlined text-[18px] flex-shrink-0 text-primary';
+      icon.className = 'material-symbols-outlined text-base flex-shrink-0 text-primary';
     }
     toast.classList.remove('hidden', 'toast-show');
     void toast.offsetWidth;
