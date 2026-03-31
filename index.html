@@ -109,21 +109,21 @@
 
         <!-- Resize -->
         <div class="space-y-3">
-          <label class="flex items-center gap-2 text-[13px] font-medium text-primary/80">
-            <span class="material-symbols-outlined text-[16px]">aspect_ratio</span>Resize
+          <label class="flex items-center gap-2 text-sm font-medium text-primary/80">
+            <span class="material-symbols-outlined text-base">aspect_ratio</span>Resize
           </label>
           <div class="grid grid-cols-[1fr,auto,1fr] gap-2 items-end">
             <div class="space-y-1">
-              <label for="width" class="text-[9px] uppercase tracking-wider text-on-surface-variant/60 ml-1 block">Width</label>
+              <label for="width" class="text-xs uppercase tracking-wider text-on-surface-variant ml-1 block">Width</label>
               <input id="width" class="w-full bg-surface-container border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-lg px-3 py-1.5 text-sm text-on-surface transition-all outline-none" placeholder="1920" type="number" min="1" max="99999" step="1"/>
             </div>
             <button id="aspect-lock"
-                    class="pb-1 flex flex-col items-center text-primary hover:text-primary/60 transition-colors focus:outline-none"
+                    class="pb-1 flex flex-col items-center text-primary hover:text-primary/60 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 rounded"
                     aria-label="비율 고정 토글" title="비율 고정">
-              <span class="material-symbols-outlined text-[18px]">lock</span>
+              <span class="material-symbols-outlined text-lg">lock</span>
             </button>
             <div class="space-y-1">
-              <label for="height" class="text-[9px] uppercase tracking-wider text-on-surface-variant/60 ml-1 block">Height</label>
+              <label for="height" class="text-xs uppercase tracking-wider text-on-surface-variant ml-1 block">Height</label>
               <input id="height" class="w-full bg-surface-container border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-lg px-3 py-1.5 text-sm text-on-surface transition-all outline-none" placeholder="1080" type="number" min="1" max="99999" step="1"/>
             </div>
           </div>
@@ -131,8 +131,8 @@
 
         <!-- Convert -->
         <div class="space-y-3">
-          <label class="flex items-center gap-2 text-[13px] font-medium text-primary/80" for="format">
-            <span class="material-symbols-outlined text-[16px]">sync</span>Convert
+          <label class="flex items-center gap-2 text-sm font-medium text-primary/80" for="format">
+            <span class="material-symbols-outlined text-base">sync</span>Convert
           </label>
           <div class="relative">
             <select id="format" class="w-full appearance-none bg-surface-container border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-lg px-3 py-1.5 text-sm text-on-surface transition-all outline-none">
@@ -141,23 +141,23 @@
               <option value="jpg">JPG (Standard)</option>
               <option value="avif">AVIF (High Detail)</option>
             </select>
-            <span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-[18px]">expand_more</span>
+            <span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-lg">expand_more</span>
           </div>
         </div>
 
         <!-- Quality -->
         <div class="space-y-3">
-          <label class="flex items-center gap-2 text-[13px] font-medium text-primary/80" for="quality">
-            <span class="material-symbols-outlined text-[16px]">tune</span>Quality
+          <label class="flex items-center gap-2 text-sm font-medium text-primary/80" for="quality">
+            <span class="material-symbols-outlined text-base">tune</span>Quality
           </label>
           <div class="space-y-2 pt-1">
             <input id="quality" class="w-full h-1 bg-surface-container rounded-lg appearance-none cursor-pointer accent-primary" max="100" min="1" type="range" value="80"
                    aria-label="출력 품질" aria-valuemin="1" aria-valuemax="100"
                    oninput="document.getElementById('quality-val').textContent=this.value+'%'"/>
-            <div class="flex justify-between text-[10px] text-on-surface-variant font-medium">
+            <div class="flex justify-between text-xs text-on-surface-variant font-medium">
               <span>저품질 (소용량)</span><span class="text-primary font-mono" id="quality-val">80%</span><span>고품질 (대용량)</span>
             </div>
-            <p id="png-notice" class="hidden text-[10px] text-on-surface-variant/70 italic mt-1">PNG는 무손실 포맷 — 품질 설정이 적용되지 않습니다.</p>
+            <p id="png-notice" class="hidden text-xs text-on-surface-variant italic mt-1">PNG는 무손실 포맷 — 품질 설정이 적용되지 않습니다.</p>
           </div>
         </div>
       </div>
@@ -167,7 +167,7 @@
         <button id="process-btn"
                 class="relative group bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary px-10 py-3 rounded-xl font-semibold tracking-wide transition-all duration-300 active:scale-95 flex items-center gap-2 overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100">
           <div class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 pointer-events-none"></div>
-          <span class="material-symbols-outlined text-[20px]">auto_fix_high</span>Process Image
+          <span class="material-symbols-outlined text-xl">auto_fix_high</span>Process Image
         </button>
       </div>
     </div>
@@ -175,12 +175,12 @@
     <!-- Result Section -->
     <div id="result-section" class="hidden glass-elevated rounded-xl p-6 shadow-2xl">
       <h2 class="text-sm font-semibold text-primary/80 flex items-center gap-2 mb-4">
-        <span class="material-symbols-outlined text-[16px]">check_circle</span>처리 완료
+        <span class="material-symbols-outlined text-base">check_circle</span>처리 완료
       </h2>
       <div class="grid grid-cols-2 gap-4 mb-5">
         <!-- Before -->
         <div class="space-y-2">
-          <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-semibold">원본</p>
+          <p class="text-xs uppercase tracking-wider text-on-surface-variant font-semibold">원본</p>
           <img id="before-preview" class="w-full h-40 object-contain rounded-lg bg-surface-container border border-outline-variant" alt="원본"/>
           <div class="text-xs text-on-surface-variant space-y-0.5">
             <p>크기: <span id="before-size" class="text-on-surface font-mono"></span></p>
@@ -189,7 +189,7 @@
         </div>
         <!-- After -->
         <div class="space-y-2">
-          <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-semibold">결과</p>
+          <p class="text-xs uppercase tracking-wider text-on-surface-variant font-semibold">결과</p>
           <img id="result-preview" class="w-full h-40 object-contain rounded-lg bg-surface-container border border-primary/20" alt="처리 결과"/>
           <div class="text-xs text-on-surface-variant space-y-0.5">
             <p>크기: <span id="result-size" class="text-on-surface font-mono"></span> <span id="result-saving" class="font-bold"></span></p>
@@ -199,7 +199,7 @@
       </div>
       <button onclick="GlacierApp.download()"
               class="w-full py-3 bg-primary/20 hover:bg-primary/30 border border-primary/40 text-primary rounded-xl font-semibold tracking-wide transition-all active:scale-95 flex items-center justify-center gap-2">
-        <span class="material-symbols-outlined text-[20px]">download</span>다운로드
+        <span class="material-symbols-outlined text-xl">download</span>다운로드
       </button>
     </div>
 
@@ -266,9 +266,9 @@ const GlacierApp = (() => {
     const btn = document.getElementById('process-btn');
     btn.disabled = isProcessing;
     if (isProcessing) {
-      btn.innerHTML = '<span class="material-symbols-outlined text-[20px] animate-spin">autorenew</span>처리 중...';
+      btn.innerHTML = '<span class="material-symbols-outlined text-xl animate-spin">autorenew</span>처리 중...';
     } else {
-      btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">auto_fix_high</span>Process Image';
+      btn.innerHTML = '<span class="material-symbols-outlined text-xl">auto_fix_high</span>Process Image';
     }
     setControlsEnabled(!isProcessing);
   }
