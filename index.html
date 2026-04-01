@@ -4,6 +4,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Glacier Utility — Frozen Light Image Processing</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/pica@9/dist/pica.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" crossorigin="anonymous"/>
 <script id="tailwind-config">
@@ -126,6 +127,14 @@
               <label for="height" class="text-xs uppercase tracking-wider text-on-surface-variant ml-1 block">Height</label>
               <input id="height" class="w-full bg-surface-container border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-lg px-3 py-1.5 text-sm text-on-surface transition-all outline-none" placeholder="1080" type="number" min="1" max="99999" step="1"/>
             </div>
+          </div>
+          <div class="flex gap-2 pt-1">
+            <button onclick="GlacierApp.quickScale(2)"
+                    class="flex-1 text-xs bg-surface-container border border-outline-variant hover:border-primary/40 hover:text-primary text-on-surface-variant rounded-lg py-1.5 transition-all focus:outline-none focus:ring-1 focus:ring-primary/50"
+                    aria-label="2배 업스케일">×2 업스케일</button>
+            <button onclick="GlacierApp.quickScale(4)"
+                    class="flex-1 text-xs bg-surface-container border border-outline-variant hover:border-primary/40 hover:text-primary text-on-surface-variant rounded-lg py-1.5 transition-all focus:outline-none focus:ring-1 focus:ring-primary/50"
+                    aria-label="4배 업스케일">×4 업스케일</button>
           </div>
         </div>
 
@@ -372,23 +381,24 @@ const GlacierApp = (() => {
     setTimeout(() => {
       const qualityPct = parseInt(document.getElementById('quality').value);
       const quality = qualityPct / 100;
-
-      const canvas = document.createElement('canvas');
-      canvas.width = w;
-      canvas.height = h;
-      const ctx = canvas.getContext('2d');
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(originalImage, 0, 0, w, h);
-
       const q = fmt === 'png' ? undefined : quality;
 
-      canvas.toBlob((blob) => {
-        if (!blob) {
-          showToast('처리 중 오류가 발생했습니다. 다시 시도해 주세요.');
-          setProcessing(false);
-          return;
-        }
+      const srcCanvas = document.createElement('canvas');
+      srcCanvas.width = originalImage.width;
+      srcCanvas.height = originalImage.height;
+      srcCanvas.getContext('2d').drawImage(originalImage, 0, 0);
+
+      const destCanvas = document.createElement('canvas');
+      destCanvas.width = w;
+      destCanvas.height = h;
+
+      pica().resize(srcCanvas, destCanvas, { quality: 3 })
+        .then(result => result.toBlob((blob) => {
+          if (!blob) {
+            showToast('처리 중 오류가 발생했습니다. 다시 시도해 주세요.');
+            setProcessing(false);
+            return;
+          }
         outputBlob = blob;
         outputFmt = fmt;
 
@@ -418,9 +428,21 @@ const GlacierApp = (() => {
         resultSection.classList.add('fade-in');
         resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-        setProcessing(false);
-      }, mime, q);
+          setProcessing(false);
+        }, mime, q))
+        .catch(() => {
+          showToast('처리 중 오류가 발생했습니다. 다시 시도해 주세요.');
+          setProcessing(false);
+        });
     }, 10);
+  }
+
+  function quickScale(factor) {
+    if (!originalImage) return;
+    const newW = Math.round(originalImage.width * factor);
+    const newH = Math.round(originalImage.height * factor);
+    document.getElementById('width').value = newW;
+    document.getElementById('height').value = newH;
   }
 
   function download() {
@@ -488,7 +510,7 @@ const GlacierApp = (() => {
     document.getElementById('process-btn').addEventListener('click', process);
   }
 
-  return { init, clearFile, download };
+  return { init, clearFile, download, quickScale };
 })();
 
 GlacierApp.init();
