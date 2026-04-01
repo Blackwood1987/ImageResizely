@@ -5,6 +5,8 @@
 <title>Glacier Utility - Crystal Clear Optimization</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script src="https://cdn.jsdelivr.net/npm/pica@9/dist/pica.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/cropperjs@1/dist/cropper.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/cropperjs@1/dist/cropper.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" crossorigin="anonymous"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" crossorigin="anonymous"/>
 <script id="tailwind-config">
@@ -44,6 +46,11 @@
   @keyframes toast-in { from { opacity:0; transform:translateX(-50%) translateY(-10px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
   .toast-show { animation: toast-in 0.2s ease-out forwards; }
   .ctrl-disabled { opacity: 0.35; pointer-events: none; user-select: none; }
+  #crop-section-m .cropper-view-box { outline: 1px solid rgba(125,211,252,0.6); }
+  #crop-section-m .cropper-line { background-color: rgba(125,211,252,0.7); }
+  #crop-section-m .cropper-point { background-color: #7dd3fc; }
+  #crop-section-m .cropper-dashed { border-color: rgba(125,211,252,0.3); }
+  .crop-ratio-btn-m.active { border-color: rgba(125,211,252,0.5); color: #7dd3fc; }
 </style>
 </head>
 <body class="bg-background text-on-background font-body min-h-screen flex flex-col">
@@ -104,6 +111,30 @@
 
     <input type="file" accept=".png,.jpg,.jpeg,.webp,.avif" class="hidden" id="file-input-m" aria-label="이미지 파일 선택"/>
   </section>
+
+  <!-- Crop Section -->
+  <div id="crop-section-m" class="hidden glass-panel rounded-xl overflow-hidden">
+    <div class="relative bg-surface-container" style="max-height:260px;">
+      <img id="crop-image-m" alt="크롭 편집" style="display:block;max-width:100%;"/>
+    </div>
+    <div class="p-3 space-y-2">
+      <div class="flex flex-wrap gap-1.5 items-center">
+        <span class="text-xs text-on-surface-variant font-medium">비율:</span>
+        <button class="crop-ratio-btn-m px-2 py-0.5 text-xs rounded-full border border-outline-variant hover:border-primary/50 hover:text-primary text-on-surface-variant transition-all" data-ratio="1" aria-label="1:1 비율">1:1</button>
+        <button class="crop-ratio-btn-m px-2 py-0.5 text-xs rounded-full border border-outline-variant hover:border-primary/50 hover:text-primary text-on-surface-variant transition-all" data-ratio="1.3333" aria-label="4:3 비율">4:3</button>
+        <button class="crop-ratio-btn-m px-2 py-0.5 text-xs rounded-full border border-outline-variant hover:border-primary/50 hover:text-primary text-on-surface-variant transition-all" data-ratio="1.7778" aria-label="16:9 비율">16:9</button>
+        <button class="crop-ratio-btn-m px-2 py-0.5 text-xs rounded-full border border-outline-variant hover:border-primary/50 hover:text-primary text-on-surface-variant transition-all" data-ratio="0.5625" aria-label="9:16 비율">9:16</button>
+        <button class="crop-ratio-btn-m px-2 py-0.5 text-xs rounded-full border border-outline-variant hover:border-primary/50 hover:text-primary text-on-surface-variant transition-all" data-ratio="NaN" aria-label="자유 비율">자유</button>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="GlacierMobile.resetCrop()" class="flex-1 text-xs py-1.5 rounded-lg border border-outline-variant hover:border-error/50 hover:text-error text-on-surface-variant transition-all" aria-label="크롭 초기화">초기화</button>
+        <button onclick="GlacierMobile.applyCrop()" class="flex-1 text-xs py-1.5 rounded-lg bg-primary/10 border border-primary/30 hover:bg-primary/20 text-primary transition-all font-medium" aria-label="크롭 적용">크롭 적용</button>
+      </div>
+      <p id="crop-applied-badge-m" class="hidden text-xs text-green-400 flex items-center gap-1">
+        <span class="material-symbols-outlined text-[14px]">crop</span>크롭이 적용되었습니다.
+      </p>
+    </div>
+  </div>
 
   <!-- Controls -->
   <section id="controls-m" class="ctrl-disabled space-y-3">
@@ -224,6 +255,8 @@ const GlacierMobile = (() => {
   let toastTimer = null;
   let previewUrl = null;
   let resultUrl = null;
+  let croppedCanvas = null;
+  let cropperInstance = null;
 
   function formatSize(bytes) {
     if (bytes < 1024) return bytes + ' B';
@@ -290,6 +323,60 @@ const GlacierMobile = (() => {
     }
   }
 
+  function initCropper() {
+    if (cropperInstance) { cropperInstance.destroy(); cropperInstance = null; }
+    croppedCanvas = null;
+    document.getElementById('crop-applied-badge-m').classList.add('hidden');
+    const img = document.getElementById('crop-image-m');
+    img.src = previewUrl;
+    document.getElementById('crop-section-m').classList.remove('hidden');
+    cropperInstance = new Cropper(img, {
+      viewMode: 1,
+      autoCropArea: 0.9,
+      movable: true,
+      zoomable: false,
+      rotatable: false,
+      scalable: false,
+      background: false,
+      toggleDragModeOnDblclick: false,
+    });
+    document.querySelectorAll('.crop-ratio-btn-m').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const r = parseFloat(btn.dataset.ratio);
+        cropperInstance.setAspectRatio(isNaN(r) ? NaN : r);
+        document.querySelectorAll('.crop-ratio-btn-m').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  }
+
+  function applyCrop() {
+    if (!cropperInstance) return;
+    const canvas = cropperInstance.getCroppedCanvas();
+    if (!canvas) { showToast('크롭 영역을 설정해 주세요.', 'info'); return; }
+    croppedCanvas = canvas;
+    document.getElementById('width-m').value = canvas.width;
+    document.getElementById('height-m').value = canvas.height;
+    aspectRatio = canvas.width / canvas.height;
+    document.getElementById('crop-applied-badge-m').classList.remove('hidden');
+    showToast('크롭이 적용되었습니다.', 'success');
+  }
+
+  function resetCrop() {
+    croppedCanvas = null;
+    document.getElementById('crop-applied-badge-m').classList.add('hidden');
+    if (originalImage) {
+      document.getElementById('width-m').value = originalImage.width;
+      document.getElementById('height-m').value = originalImage.height;
+      aspectRatio = originalImage.width / originalImage.height;
+    }
+    if (cropperInstance) {
+      cropperInstance.reset();
+      document.querySelectorAll('.crop-ratio-btn-m').forEach(b => b.classList.remove('active'));
+    }
+  }
+
   function loadFile(file) {
     if (!file.type.startsWith('image/')) { showToast('이미지 파일만 지원합니다.'); return; }
     if (file.size > 50 * 1024 * 1024) { showToast('50MB 이하 파일만 지원합니다.'); return; }
@@ -324,12 +411,16 @@ const GlacierMobile = (() => {
 
       setControlsEnabled(true);
       updateQualityForFormat(document.getElementById('format-m').value);
+      initCropper();
     };
     img.onerror = () => showToast('이미지를 불러올 수 없습니다.');
     img.src = url;
   }
 
   function clearFile() {
+    if (cropperInstance) { cropperInstance.destroy(); cropperInstance = null; }
+    croppedCanvas = null;
+    document.getElementById('crop-section-m').classList.add('hidden');
     originalImage = null;
     originalFile = null;
     outputBlob = null;
@@ -376,10 +467,13 @@ const GlacierMobile = (() => {
       const quality = parseInt(document.getElementById('quality-m').value) / 100;
       const q = fmt === 'png' ? undefined : quality;
 
-      const srcCanvas = document.createElement('canvas');
-      srcCanvas.width = originalImage.width;
-      srcCanvas.height = originalImage.height;
-      srcCanvas.getContext('2d').drawImage(originalImage, 0, 0);
+      const srcCanvas = croppedCanvas || (() => {
+        const c = document.createElement('canvas');
+        c.width = originalImage.width;
+        c.height = originalImage.height;
+        c.getContext('2d').drawImage(originalImage, 0, 0);
+        return c;
+      })();
 
       const destCanvas = document.createElement('canvas');
       destCanvas.width = w;
@@ -499,7 +593,7 @@ const GlacierMobile = (() => {
     document.getElementById('process-btn-m').addEventListener('click', process);
   }
 
-  return { init, clearFile, download, quickScale };
+  return { init, clearFile, download, quickScale, applyCrop, resetCrop };
 })();
 
 GlacierMobile.init();
